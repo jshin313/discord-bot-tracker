@@ -28,11 +28,11 @@ impl EventHandler for Handler {
             let total_num_cases = get_total_num_cases();
             let s1: String = total_num_cases.to_string();
 
-            let offcampus = get_offcampus_cases();
-            let s2: String = offcampus.to_string();
-
             let oncampus = get_oncampus_cases();
-            let s3: String = oncampus.to_string();
+            let s2: String = oncampus.to_string();
+
+            let offcampus = get_offcampus_cases();
+            let s3: String = offcampus.to_string();
 
             if let Err(why) = msg.channel_id.say(&ctx.http, format!("Total Cases: `{}`", s1)).await {
                 println!("Error sending message: {:?}", why);
