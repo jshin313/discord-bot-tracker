@@ -116,11 +116,11 @@ fn get_last_updated() -> std::string::String {
     // Look for when the page was last updated
     for element in document.find(Name("p")) {
         let last_updated = element.text();
-        if (!last_updated.contains("Updated")) {
+        if !last_updated.contains("Updated") {
             continue;
         }
 
-        let mut date = last_updated.split(")").collect::<Vec<&str>>()[0];
+        let date = last_updated.split(")").collect::<Vec<&str>>()[0];
 
         // println!("{}", date);
         return date.to_string();
@@ -146,6 +146,8 @@ impl EventHandler for Handler {
             let s4: String = employees.to_string();
 
             
+            let channel_id = msg.channel_id;
+            //
             // The create message builder allows you to easily create embeds and messages
             // using a builder syntax.
             // This example will create a message that says "Hello, World!", with an embed that has
@@ -176,9 +178,36 @@ impl EventHandler for Handler {
                 m
             }).await;
 
+
             if let Err(why) = msg {
                 println!("Error sending message: {:?}", why);
+                // Probably embeds are disabled
+                // Send same message without embeds
+                    // Sending a message can fail, due to a network error, an
+                    // authentication error, or lack of permissions to post in the
+                    // channel, so log to stdout when some error happens, with a
+                    // description of it.
+
+                    let total_num_cases = get_total_num_cases();
+                    let s1: String = total_num_cases.to_string();
+
+                    let oncampus = get_oncampus_cases();
+                    let s2: String = oncampus.to_string();
+
+                    let offcampus = get_offcampus_cases();
+                    let s3: String = offcampus.to_string();
+
+                    if let Err(why) = channel_id.say(&ctx.http, format!("Total Cases: `{}`", s1)).await {
+                        println!("Error sending message: {:?}", why);
+                    }
+                    if let Err(why) = channel_id.say(&ctx.http, format!("On-campus Cases: `{}`", s2)).await {
+                        println!("Error sending message: {:?}", why);
+                    }
+                    if let Err(why) = channel_id.say(&ctx.http, format!("Off-campus Cases: `{}`", s3)).await {
+                        println!("Error sending message: {:?}", why);
+                    }
             }
+
         }
 
     }
